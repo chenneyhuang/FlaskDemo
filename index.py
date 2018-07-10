@@ -1,6 +1,7 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from werkzeug.utils import secure_filename
 import os
+import json
 
 
 app = Flask(__name__)
@@ -47,6 +48,16 @@ def upload():
             return 'hello, ' + request.form.get('name', 'little apple') + '. success'
         else:
             return 'hello, ' + request.form.get('name', 'little apple') + '. failed'
+
+
+@app.route('/json', methods=['POST'])
+def my_json():
+    print request.headers
+    print request.json
+    rt = {'info':'hello ' + request.json['name']}
+    response = Response(json.dumps(rt), mimetype='application/json')
+    response.headers.add('Server', 'python flask')
+    return Response(json.dumps(rt), mimetype='application/json')
 
 
 if __name__ == '__main__':
